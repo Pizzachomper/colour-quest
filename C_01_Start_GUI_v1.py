@@ -57,7 +57,7 @@ class StartGame:
             self.play_button.grid(row=0, column=1)
 
     def check_rounds(self):
-        # Retrieve temperature to get converted
+        # Retrieve number of rounds the user wants to play
         rounds_wanted = self.num_rounds_entry.get()
 
         # Reset label and entry box (for when users come to home screen)

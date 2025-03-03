@@ -106,6 +106,17 @@ class Play:
 
         self.game_heading_label.grid(row=0)
 
+        self.end_game_button = Button(self.game_frame, text="End Game",
+                                      font=("Arial", "16", "bold"),
+                                      fg="#FFFFFF", bg="#990000", width="10",
+                                      command=self.close_play)
+        self.end_game_button.grid(row=1)
+
+    def close_play(self):
+        # reshow root (ie: choose rounds) and end current game / allow new game to start
+        root.deiconify()
+        self.play_box.destroy()
+
 # main routine
 if __name__ == "__main__":
     root = Tk()
