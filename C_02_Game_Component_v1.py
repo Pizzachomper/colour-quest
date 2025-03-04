@@ -80,6 +80,22 @@ class Play:
         self.hints_stats_frame.grid(row=6)
 
         # List for buttons
+        control_button_list = [
+            [self.game_frame, "Next Round", "#0057D8", "", 21, 5, None],
+            [self.hints_stats_frame, "Hints", "#FF8000", "", 10, 0, 0],
+            [self.hints_stats_frame, "Stats", "#333333", "", 10, 0, 1],
+            [self.game_frame, "End", "#990000", self.close_play, 30, 7, None]
+        ]
+
+        # Create buttons to add to list
+        control_ref_list = []
+        for item in control_button_list:
+            make_control_button = Button(item[0], text=item[1], bg=item[2],
+                                         command=item[3], font=("Arial", "16", "bold"),
+                                         fg="#FFFFFF", width=item[4])
+            make_control_button.grid(row=item[5], column=item[6], padx=5, pady=5)
+
+            control_ref_list.append(make_control_button)
 
 
     def close_play(self):
