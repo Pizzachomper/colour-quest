@@ -147,6 +147,9 @@ class Play:
         self.colour_frame = Frame(self.game_frame)
         self.colour_frame.grid(row=3)
 
+        self.colour_button_ref = []
+        self.button_colours_list = []
+
         # Create 4 buttons in a 2 by 2 grid
         for item in range(0, 4):
             self.colour_button = Button(self.colour_frame, font=body_font,
@@ -154,6 +157,8 @@ class Play:
             self.colour_button.grid(row=item // 2,
                                     column=item % 2,
                                     padx=5, pady=5)
+            
+            self.colour_button_ref.append(self.colour_button)
             
         # Frame to hold hints and stats buttons
         self.hints_stats_frame = Frame(self.game_frame)
@@ -201,7 +206,12 @@ class Play:
         self.target_label.config(text=f"Target score: {median}", font=("Arial", "14", "bold"))
         self.results_label.config(text=f"{'=' * 7}", bg="#F0F0F0")
 
-        # Update heading, and score to beat labels
+        # Configure buttons using foreground and background colours from list
+        # Enable colour buttons
+        for count, item in enumerate(self.colour_button_ref):
+            item.config(fg=self.round_colour_list[count][2], 
+                        bg=self.round_colour_list[count][0],
+                        text=self.round_colour_list[count][0], state=NORMAL)
 
     def close_play(self):
         # reshow root (ie: choose rounds) and end current game / allow new game to start
