@@ -180,7 +180,6 @@ class Play:
         # Colour lists and score list
         self.round_colour_list = []
         self.all_scores_list = []
-        self.all_medians_list = []
         self.all_high_score_list = []
 
         self.play_box = Toplevel()
@@ -279,7 +278,6 @@ class Play:
         self.target_score.set(median)
 
         # Add median and high score to lists for stats
-        self.all_medians_list.append(median)
         self.all_high_score_list.append(highest)
 
         # Update heading and score to beat labels. Hide results label
@@ -323,7 +321,6 @@ class Play:
         self.results_label.config(text=result_text, bg=result_bg)
 
         print("all scores:", self.all_scores_list)
-        print("all medians:", self.all_medians_list)
         print("highest scores:", self.all_high_score_list)
 
         # Enable stats and next buttons, disable colour buttons
