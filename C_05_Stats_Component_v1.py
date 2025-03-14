@@ -107,46 +107,94 @@ class Stats:
         # setup dialouge box
         self.stats_box = Toplevel()
 
-        # disable hint button
+        # disable stats button
         partner.stats_button.config(state=DISABLED)
 
-        # If users press cross at top, closes hint box and releases hint button
+        # If users press cross at top, closes stat box and releases stat button
         self.stats_box.protocol('WM_DELETE_WINDOW',
                                partial(self.close_stats, partner)) 
 
-        self.stats_frame = Frame(self.hint_frame, width=300,
-                                height=200)
-        self.hint_frame.grid()
+        self.stats_frame = Frame(self.stats_box, width=350)
+        self.stats_frame.grid()
 
-        self.hint_heading_label = Label(self.hint_frame,
-                                        text= "Hint / Info",
-                                        font=("Arial", "14", "bold"))
-        self.hint_heading_label.grid(row=0)
+        # Math to populate Stats dialogue
+        rounds_played = len(user_scores)
 
-        hint_text = "To use the program, simply enter the temperature you wish to convert to either Celsisus or Fahrenheit \n"\
-                    "Note that -273C and -459F, if you try to convert a temperature lower than these values, you will get an error message\n"\
-                    "To see your calculation history and export it as a text file, please click the 'History / Export' button." 
+        success_rate = rounds_won / rounds_played * 100
+        total_score = sum(user_scores)
+        max_possible = sum(high_scores)
 
-        self.hint_text_label = Label(self.hint_frame,
-                                     text=hint_text, wraplength=350,
-                                     justify="left")
-        self.hint_text_label.grid(row=1, padx=10)
+        best_score = user_scores[-1]
+        average_score = total_score / rounds_played
 
-        self.dismiss_button = Button(self.hint_frame,
-                                     font=("Arial", "14", "bold"),
-                                     text="Dismiss", bg="#CC6600",
-                                     fg="#FFFFFF", 
-                                     command=partial(self.close_hint, partner))
-        self.dismiss_button.grid(row=2, padx=10, pady=10)
+        # Strings for Stats labels
 
-        # List and loop to set background colour on everything except the buttons
-        recolour_list = [self.hint_frame, self.hint_heading_label,
-                         self.hint_text_label]
-        
-        for item in recolour_list:
-            item.config(bg=background)
+        success_string = (f"Success Rate: {rounds_won} / {rounds_played}"
+                          f" ({success_rate:.0f}%)")
+        total_score_string = f"Total Score: {total_score}"
+        max_possible_string = f"Maximum possible score: {max_possible}"
+        best_score_string = f"Best score: {best_score}"
 
-    def close_hint(self, partner):
-        partner.to_hint_button.config(state=NORMAL)
-        self.hint_frame.destroy()
+        # Custom comment text and formatting
+        if total_score == max_possible:
+            comment_string = ("Amazing! You got the highest possible score!")
+            comment_colour = "#D5E8D4"
 
+        elif total_score == 0:
+            comment_string = ("Oops - you've lost every round! You might want to look at the hints!")
+            comment_colour = "#F8CECC"
+            best_score_string = f"Best Score: n/a"
+
+        else:
+            comment_string = ""
+            comment_colour = "#F0F0F0"
+
+        average_score_string = f"Average score: {average_score:.0f}\n"
+
+        heading_font = ("Arial", "16", "bold")
+        normal_font = ("Arial", "14")
+        comment_font = ("Arial", "13")
+
+        # label list (text | font | 'Sticky')
+        all_stats_strings = [
+            ["Statistics", heading_font, ""],
+            [success_string, normal_font, "W"],
+            [total_score_string, normal_font, "W"],
+            [max_possible_string, normal_font, "W"],
+            [comment_string, comment_font, "W"],
+            ["\nRound Stats", heading_font, ""],
+            [best_score_string, normal_font, "W"],
+            [average_score_string, normal_font, "W"]
+        ]
+
+        stats_label_ref_list = []
+        for count, item in enumerate(all_stats_strings):
+            self.stats_label = Label(self.stats_frame, text=item[0], font=item[1],
+                                     anchor="w", justify="left",
+                                     padx=30, pady=5)
+            self.stats_label.grid(row=count, sticky=item[2], padx=10)
+            stats_label_ref_list.append(self.stats_label)
+
+        # Configure comment label background (for all won / all lost)
+        stats_comment_label = stats_label_ref_list[4]
+        stats_comment_label.config(bg=comment_colour)
+
+        self.dismiss_button = Button(self.stats_frame,
+                                     font=("Arial", "16", "bold"),
+                                     text="Dismiss", bg="#333333",
+                                     fg="#FFFFFF", width=20,
+                                     command=partial(self.close_stats, partner))
+        self.dismiss_button.grid(row=8, padx=10, pady=10)
+
+        # Closes help dialogue (used by button and x at the top of dialogue)
+
+    def close_stats(self, partner):
+        partner.stats_button.config(state=NORMAL)
+        self.stats_box.destroy()
+
+# main routine
+if __name__ == "__main__":
+    root = Tk()
+    root.title("Colour Quest")
+    StartGame()
+    root.mainloop()
