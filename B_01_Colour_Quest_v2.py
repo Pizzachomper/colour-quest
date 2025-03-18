@@ -189,6 +189,9 @@ class Play:
         self.game_frame = Frame(self.play_box)
         self.game_frame.grid(padx=10, pady=10)
 
+        # If users press the 'x' on the game window, end the entire game
+        self.play_box.protocol('WM_DELETE_WINDOW', root.destroy)
+
         # body font for most labels
         body_font = ("Arial", "12")
 
@@ -383,7 +386,9 @@ class Play:
         Displays hints for playing game
         :return:
         """
-        DisplayHints(self)
+        # check we have played at least one round so that stats button is not enabled in error
+        rounds_played = self.rounds_played.get()
+        DisplayHints(self, rounds_played)
     
     def to_stats(self):
         """
@@ -404,14 +409,17 @@ class DisplayHints:
     Displays hints for colour quest game
     """
 
-    def __init__(self, partner):
+    def __init__(self, partner, rounds_played):
+        self.rounds_played = rounds_played
         
         # setup dialouge box and background colour
         background = "#ffe6cc"
         self.hint_box = Toplevel()
 
-        # disable hint button
+        # disable help, stats and end game button button to prevent users from leaving a dialogue open and then going back to the rounds dialogue
         partner.hints_button.config(state=DISABLED)
+        partner.end_game_button.config(state=DISABLED)
+        partner.stats_button.config(state=DISABLED)
 
         # If users press cross at top, closes hint box and releases hint button
         self.hint_box.protocol('WM_DELETE_WINDOW',
@@ -445,7 +453,9 @@ class DisplayHints:
         # Closes help dialogue (used by button and x at the top of dialogue)
 
     def close_hint(self, partner):
+        # Put help button back to normal
         partner.hints_button.config(state=NORMAL)
+        partner.end
         self.hint_box.destroy()
 
 
