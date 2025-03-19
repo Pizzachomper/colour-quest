@@ -455,7 +455,12 @@ class DisplayHints:
     def close_hint(self, partner):
         # Put help button back to normal
         partner.hints_button.config(state=NORMAL)
-        partner.end
+        partner.end_game_button.config(state=NORMAL)
+
+        # Only enable stats button if we have played at least one round
+        if self.rounds_played >= 1:
+            partner.stats_button.config(state=NORMAL)
+
         self.hint_box.destroy()
 
 
@@ -466,6 +471,11 @@ class Stats:
 
     def __init__(self, partner, all_stats_info):
         
+        # Disable buttons to prevent program crashing
+        partner.hints_button.config(state=DISABLED)
+        partner.end_game_button.config(state=DISABLED)
+        partner.stats_button.config(state=DISABLED)
+
         # Extract information from master list
         rounds_won = all_stats_info[0]
         user_scores = all_stats_info[1]
@@ -559,6 +569,9 @@ class Stats:
         # Closes help dialogue (used by button and x at the top of dialogue)
 
     def close_stats(self, partner):
+        # Put help button back to normal
+        partner.hints_button.config(state=NORMAL)
+        partner.end_game_button.config(state=NORMAL)
         partner.stats_button.config(state=NORMAL)
         self.stats_box.destroy()
 
